@@ -1,0 +1,146 @@
+  Spring MVC
+  
+  1.mvc
+  
+  设计模式
+  
+  m:model      业务逻辑  一个一个的需求                         service
+  
+  v:view       视图     展示数据/结果                            jsp
+  
+  c:controller 控制器  根据不同的请求，调用不同的业务逻辑        servlet
+  
+  
+  2.spring和smvc关系
+  
+  springMVC是spring的一个组件
+
+  问题：
+   spring需要不需要整合springmvc
+    是一个整体，不需要
+
+
+  3.搭建框架	
+     1.新建web项目
+	 2.添加jar包
+	 3.添加配置文件  springmvc.xml
+	 
+	 
+	 问题：现在是web项目，在web中要初始化springmvc.xml
+	 
+	 web.xml是在项目启动的时候第一个加载的文件
+	 
+	 4.在web.xml文件中配置核心控制器，并指定springmvc.xml文件的路径
+	 
+	 
+	 5写一个控制器
+	  普通类
+	  普通类加上@Controller注解，就是控制器，但是前提是必须被扫描到
+	  
+	  在类中写一个方法
+	  
+	  /WEB-INF/views/success.jsp
+	  
+	  6. 扫描包
+	  <context:component-scan base-package="com.zhiyou"></context:component-scan>
+	  
+	  7.配置视图解析器
+	  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		  <property name="prefix" value="/WEB-INF/views/"></property>
+		  <property name="suffix" value=".jsp"></property>
+	  </bean>
+	  
+	  controller中方法的返回值其实是页面的名字   succes
+	  在返回值上加上前缀和后缀，来找到对应的页面
+	  
+	  例如 ：返回的是 success
+	  前缀是  /WEB-INF/views/
+	  后缀是  .jsp
+	  拼接后是 /WEB-INF/views/success.jsp
+	  
+	  
+	  @Component    通用
+	  @Repository   dao
+	  @Service      service
+	  @Controller   控制器
+	  
+	  
+	  
+	  
+	  4.传参数
+	  
+	  页面中的参数传入 Controller 
+	  
+	  
+	  登录  username pwd
+	  
+	  @RequestMapping("/login")
+		public String login(String username,int age,String pwd, HttpServletRequest request,HttpSession session) {
+			String uname=request.getParameter("username");
+			System.out.println("request uname: "+uname);
+			System.out.println("controller  username:"+username);
+			System.out.println("controller age: "+age);
+			System.out.println("controller pwd: "+pwd);
+			return userService.login(username)?"success":"error";
+		}
+		
+		
+		
+		注意：页面跳转默认是 转发
+	 
+	 
+	   5.跳转方式
+	   forward
+	    @RequestMapping(value="/getById2")
+		public String getById2(int id) {
+			System.out.println("调用service 传进来id: "+id);
+			userService.getById(id);
+			return "forward:/getById/1";
+		}
+		
+	   redirect 
+	     @RequestMapping(value="/getById2")
+			public String getById2(int id) {
+				System.out.println("调用service 传进来id: "+id);
+				userService.getById(id);
+				return "redirect:/getById/1";
+			}
+	   
+	   指的是控制器之间的跳转
+	   
+	   
+	   
+	   6.传参 
+		   对象传参
+		   
+		   form中  name属性的值必须是 pojo类的属性
+		   框架会自动进行封装。controller可以直接获取对象
+	   
+	      如果对象之间是嵌套关系，form表单中写上对应对象的属性
+		  
+		  form:  供应商名字:<input type="text" name="supplier.name"><br>
+		  
+		  
+	   
+	   
+	   
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
